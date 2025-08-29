@@ -263,6 +263,15 @@
         <div class="image-gallery" id="imageGallery"></div>
     </div>
 
+    <div id="authSection" style="text-align: center; margin-bottom: 20px;">
+    <input type="email" id="emailInput" placeholder="E-Mail" />
+    <input type="password" id="passwordInput" placeholder="Passwort" />
+    <button onclick="login()">Anmelden</button>
+    <button onclick="logout()">Abmelden</button>
+    <p id="authStatus" style="color: white; margin-top: 10px;"></p>
+</div>
+
+
     <script>
         // 🔥 HIER DEINE SUPABASE KEYS EINTRAGEN! 🔥
         const SUPABASE_URL = 'https://ujkdukifdmlzeoigwyzz.supabase.co';
