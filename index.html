@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meine Bilder-Galerie</title>
@@ -76,7 +77,7 @@
 
         .image-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
             margin-top: 30px;
         }
@@ -155,9 +156,85 @@
             backdrop-filter: blur(10px);
         }
 
+        /* Kommentar-Styles */
+        .comments-section {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .comment {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .comment-text {
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .comment-date {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .comment-form input, .comment-form textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
+        .comment-form button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .comment-form button:hover {
+            background: #5a67d8;
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .error {
+            background: rgba(255,0,0,0.1);
+            color: #ff4757;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .image-gallery {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
                 gap: 15px;
             }
             
@@ -172,7 +249,7 @@
         <h1>🖼️ Meine Bilder-Galerie 🖼️</h1>
         
         <div class="stats">
-            <span id="imageCount">0</span> Bilder hochgeladen
+            <span id="imageCount">Lädt...</span> Bilder in der Galerie
         </div>
 
         <div class="upload-area" onclick="document.getElementById('fileInput').click()">
@@ -181,93 +258,320 @@
             <input type="file" id="fileInput" multiple accept="image/*">
         </div>
 
+        <div id="loadingMessage" class="loading">Lade Bilder...</div>
+        <div id="errorMessage" class="error" style="display: none;"></div>
         <div class="image-gallery" id="imageGallery"></div>
     </div>
 
     <script>
-        let imageCount = 0;
+        // 🔥 HIER DEINE SUPABASE KEYS EINTRAGEN! 🔥
+        const SUPABASE_URL = 'DEINE-SUPABASE-URL-HIER';
+        const SUPABASE_ANON_KEY = 'DEIN-SUPABASE-ANON-KEY-HIER';
+        
+        // Supabase initialisieren
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // DOM Elemente
         const fileInput = document.getElementById('fileInput');
         const imageGallery = document.getElementById('imageGallery');
         const imageCountElement = document.getElementById('imageCount');
         const uploadArea = document.querySelector('.upload-area');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const errorMessage = document.getElementById('errorMessage');
 
-        // Drag & Drop Funktionalität
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.style.background = 'rgba(255,255,255,0.3)';
+        // App starten
+        document.addEventListener('DOMContentLoaded', () => {
+            loadImages();
+            setupEventListeners();
         });
 
-        uploadArea.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            uploadArea.style.background = 'rgba(255,255,255,0.1)';
-        });
+        function setupEventListeners() {
+            // Drag & Drop Funktionalität
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.background = 'rgba(255,255,255,0.3)';
+            });
 
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.style.background = 'rgba(255,255,255,0.1)';
-            const files = Array.from(e.dataTransfer.files);
-            handleFiles(files);
-        });
+            uploadArea.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadArea.style.background = 'rgba(255,255,255,0.1)';
+            });
 
-        fileInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files);
-            handleFiles(files);
-        });
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.background = 'rgba(255,255,255,0.1)';
+                const files = Array.from(e.dataTransfer.files);
+                handleFiles(files);
+            });
 
-        function handleFiles(files) {
-            files.forEach(file => {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        addImageToGallery(e.target.result, file.name, file.size);
-                    };
-                    reader.readAsDataURL(file);
-                }
+            fileInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                handleFiles(files);
             });
         }
 
-        function addImageToGallery(src, name, size) {
-            imageCount++;
-            updateImageCount();
+        // Bilder aus Datenbank laden
+        async function loadImages() {
+            try {
+                loadingMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                const { data: images, error } = await supabaseClient
+                    .from('images')
+                    .select('*')
+                    .order('uploaded_at', { ascending: false });
 
-            const imageItem = document.createElement('div');
-            imageItem.className = 'image-item';
-            imageItem.style.animationDelay = `${imageCount * 0.1}s`;
+                loadingMessage.style.display = 'none';
 
-            const sizeKB = (size / 1024).toFixed(1);
-            
-            imageItem.innerHTML = `
-                <img src="${src}" alt="${name}">
-                <button class="delete-button" onclick="removeImage(this)">×</button>
-                <div class="image-info">
-                    <div class="image-name">${name}</div>
-                    <div class="image-size">${sizeKB} KB</div>
-                </div>
-            `;
+                if (error) {
+                    throw new Error(error.message);
+                }
 
-            imageGallery.appendChild(imageItem);
+                imageGallery.innerHTML = '';
+                
+                if (images && images.length > 0) {
+                    for (const image of images) {
+                        await displayImageInGallery(image);
+                    }
+                } else {
+                    imageGallery.innerHTML = '<p style="color: white; text-align: center; grid-column: 1/-1;">Noch keine Bilder hochgeladen. Sei der Erste!</p>';
+                }
 
-            // Animation beim Hinzufügen
-            setTimeout(() => {
-                imageItem.style.opacity = '1';
-                imageItem.style.transform = 'translateY(0)';
-            }, 100);
+                updateImageCount(images ? images.length : 0);
+
+            } catch (error) {
+                console.error('Fehler beim Laden der Bilder:', error);
+                showError(`Fehler beim Laden: ${error.message}`);
+                loadingMessage.style.display = 'none';
+                updateImageCount(0);
+            }
         }
 
-        function removeImage(button) {
-            const imageItem = button.parentElement;
-            imageItem.style.transform = 'scale(0) rotate(180deg)';
-            imageItem.style.opacity = '0';
-            
-            setTimeout(() => {
-                imageItem.remove();
-                imageCount--;
-                updateImageCount();
-            }, 300);
+        // Neue Dateien verarbeiten
+        async function handleFiles(files) {
+            for (const file of files) {
+                if (file.type.startsWith('image/')) {
+                    await uploadImage(file);
+                }
+            }
+            // Nach dem Upload alle Bilder neu laden
+            await loadImages();
         }
 
-        function updateImageCount() {
-            imageCountElement.textContent = imageCount;
+        // Bild zu Supabase hochladen
+        async function uploadImage(file) {
+            try {
+                const fileName = `${Date.now()}-${file.name}`;
+                
+                // 1. Bild zu Storage hochladen
+                const { data: storageData, error: storageError } = await supabaseClient.storage
+                    .from('images')
+                    .upload(fileName, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+
+                if (storageError) {
+                    throw new Error(`Storage Fehler: ${storageError.message}`);
+                }
+
+                // 2. Bild-Info in Datenbank speichern
+                const { data: dbData, error: dbError } = await supabaseClient
+                    .from('images')
+                    .insert({
+                        title: file.name,
+                        image_url: fileName,
+                        file_size: file.size
+                    })
+                    .select()
+                    .single();
+
+                if (dbError) {
+                    throw new Error(`Datenbank Fehler: ${dbError.message}`);
+                }
+
+                console.log('Bild erfolgreich hochgeladen:', dbData);
+
+            } catch (error) {
+                console.error('Fehler beim Upload:', error);
+                showError(`Upload Fehler: ${error.message}`);
+            }
+        }
+
+        // Bild in Galerie anzeigen
+        async function displayImageInGallery(imageData) {
+            try {
+                // URL für das Bild generieren
+                const { data: urlData } = supabaseClient.storage
+                    .from('images')
+                    .getPublicUrl(imageData.image_url);
+
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item';
+                imageItem.dataset.imageId = imageData.id;
+
+                const sizeKB = imageData.file_size ? (imageData.file_size / 1024).toFixed(1) : 'Unknown';
+                const uploadDate = new Date(imageData.uploaded_at).toLocaleDateString('de-DE');
+                
+                imageItem.innerHTML = `
+                    <img src="${urlData.publicUrl}" alt="${imageData.title}" loading="lazy">
+                    <button class="delete-button" onclick="deleteImage(${imageData.id}, '${imageData.image_url}')">×</button>
+                    <div class="image-info">
+                        <div class="image-name">${imageData.title}</div>
+                        <div class="image-size">${sizeKB} KB • ${uploadDate}</div>
+                    </div>
+                    <div class="comments-section">
+                        <div id="comments-${imageData.id}"></div>
+                        <div class="comment-form">
+                            <input type="text" placeholder="Dein Name" id="author-${imageData.id}" maxlength="50">
+                            <textarea placeholder="Schreib einen Kommentar..." id="comment-${imageData.id}" rows="3" maxlength="500"></textarea>
+                            <button onclick="addComment(${imageData.id})">💬 Kommentar hinzufügen</button>
+                        </div>
+                    </div>
+                `;
+
+                imageGallery.appendChild(imageItem);
+
+                // Kommentare für dieses Bild laden
+                await loadComments(imageData.id);
+
+            } catch (error) {
+                console.error('Fehler beim Anzeigen des Bildes:', error);
+            }
+        }
+
+        // Kommentare laden
+        async function loadComments(imageId) {
+            try {
+                const { data: comments, error } = await supabaseClient
+                    .from('comments')
+                    .select('*')
+                    .eq('image_id', imageId)
+                    .order('created_at', { ascending: true });
+
+                if (error) {
+                    throw new Error(error.message);
+                }
+
+                const commentsContainer = document.getElementById(`comments-${imageId}`);
+                if (comments && comments.length > 0) {
+                    commentsContainer.innerHTML = comments.map(comment => `
+                        <div class="comment">
+                            <div class="comment-author">${comment.author_name}</div>
+                            <div class="comment-text">${comment.comment_text}</div>
+                            <div class="comment-date">${new Date(comment.created_at).toLocaleString('de-DE')}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    commentsContainer.innerHTML = '<p style="color: #999; font-style: italic;">Noch keine Kommentare. Schreib den ersten!</p>';
+                }
+
+            } catch (error) {
+                console.error('Fehler beim Laden der Kommentare:', error);
+            }
+        }
+
+        // Kommentar hinzufügen
+        async function addComment(imageId) {
+            try {
+                const authorInput = document.getElementById(`author-${imageId}`);
+                const commentInput = document.getElementById(`comment-${imageId}`);
+                
+                const author = authorInput.value.trim();
+                const commentText = commentInput.value.trim();
+
+                if (!author || !commentText) {
+                    alert('Bitte Name und Kommentar ausfüllen!');
+                    return;
+                }
+
+                const { data, error } = await supabaseClient
+                    .from('comments')
+                    .insert({
+                        image_id: imageId,
+                        author_name: author,
+                        comment_text: commentText
+                    });
+
+                if (error) {
+                    throw new Error(error.message);
+                }
+
+                // Eingaben leeren
+                authorInput.value = '';
+                commentInput.value = '';
+
+                // Kommentare neu laden
+                await loadComments(imageId);
+
+            } catch (error) {
+                console.error('Fehler beim Hinzufügen des Kommentars:', error);
+                showError(`Kommentar Fehler: ${error.message}`);
+            }
+        }
+
+        // Bild löschen
+        async function deleteImage(imageId, fileName) {
+            if (!confirm('Bild wirklich löschen? Das kann nicht rückgängig gemacht werden!')) {
+                return;
+            }
+
+            try {
+                // 1. Kommentare löschen
+                await supabaseClient
+                    .from('comments')
+                    .delete()
+                    .eq('image_id', imageId);
+
+                // 2. Datenbank-Eintrag löschen
+                const { error: dbError } = await supabaseClient
+                    .from('images')
+                    .delete()
+                    .eq('id', imageId);
+
+                if (dbError) {
+                    throw new Error(dbError.message);
+                }
+
+                // 3. Datei aus Storage löschen
+                const { error: storageError } = await supabaseClient.storage
+                    .from('images')
+                    .remove([fileName]);
+
+                if (storageError) {
+                    console.warn('Storage Lösch-Warnung:', storageError.message);
+                }
+
+                // 4. Element aus DOM entfernen
+                const imageElement = document.querySelector(`[data-image-id="${imageId}"]`);
+                if (imageElement) {
+                    imageElement.style.transform = 'scale(0) rotate(180deg)';
+                    imageElement.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        imageElement.remove();
+                        updateImageCount(imageGallery.children.length);
+                    }, 300);
+                }
+
+            } catch (error) {
+                console.error('Fehler beim Löschen:', error);
+                showError(`Lösch-Fehler: ${error.message}`);
+            }
+        }
+
+        // Hilfsfunktionen
+        function updateImageCount(count) {
+            imageCountElement.textContent = count;
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
         }
 
         // Initiale Styling für Animationen
@@ -277,6 +581,18 @@
                 opacity: 0;
                 transform: translateY(20px);
                 transition: all 0.3s ease;
+                animation: fadeInUp 0.6s ease forwards;
+            }
+            
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
         `;
         document.head.appendChild(style);
