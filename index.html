@@ -6,241 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meine Bilder-Galerie</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .upload-area {
-            background: rgba(255,255,255,0.1);
-            border: 3px dashed rgba(255,255,255,0.5);
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .upload-area:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.8);
-        }
-
-        .upload-area input[type="file"] {
-            display: none;
-        }
-
-        .upload-button {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .upload-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-
-        .upload-text {
-            color: white;
-            margin-top: 15px;
-            font-size: 1.1rem;
-        }
-
-        .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .image-item {
-            position: relative;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .image-item:hover {
-            transform: translateY(-10px) rotate(1deg);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .image-item img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .image-item:hover img {
-            transform: scale(1.1);
-        }
-
-        .image-info {
-            padding: 15px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .image-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .image-size {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .delete-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255,0,0,0.8);
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s ease;
-        }
-
-        .delete-button:hover {
-            background: rgba(255,0,0,1);
-        }
-
-        .stats {
-            text-align: center;
-            color: white;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-
-        /* Kommentar-Styles */
-        .comments-section {
-            background: rgba(255,255,255,0.9);
-            padding: 15px;
-            margin-top: 10px;
-            border-radius: 0 0 15px 15px;
-        }
-
-        .comment {
-            background: #f8f9fa;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-
-        .comment-author {
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 5px;
-        }
-
-        .comment-text {
-            color: #333;
-            line-height: 1.4;
-        }
-
-        .comment-date {
-            font-size: 0.8rem;
-            color: #999;
-            margin-top: 5px;
-        }
-
-        .comment-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .comment-form input, .comment-form textarea {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-family: inherit;
-        }
-
-        .comment-form button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .comment-form button:hover {
-            background: #5a67d8;
-        }
-
-        .loading {
-            text-align: center;
-            color: white;
-            padding: 20px;
-        }
-
-        .error {
-            background: rgba(255,0,0,0.1);
-            color: #ff4757;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
+        /* ====== Styles unverändert ====== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; color: white; margin-bottom: 30px; font-size: 2.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .upload-area { background: rgba(255,255,255,0.1); border: 3px dashed rgba(255,255,255,0.5); border-radius: 15px; padding: 40px; text-align: center; margin-bottom: 30px; backdrop-filter: blur(10px); transition: all 0.3s ease; display:none; }
+        .upload-area:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.8); }
+        .upload-area input[type="file"] { display: none; }
+        .upload-button { background: linear-gradient(45deg, #ff6b6b, #ee5a24); color: white; padding: 15px 30px; border: none; border-radius: 50px; font-size: 1.1rem; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .upload-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+        .upload-text { color: white; margin-top: 15px; font-size: 1.1rem; }
+        .image-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+        .image-item { position: relative; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .image-item:hover { transform: translateY(-10px) rotate(1deg); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .image-item img { width: 100%; height: 250px; object-fit: cover; transition: transform 0.3s ease; }
+        .image-item:hover img { transform: scale(1.1); }
+        .image-info { padding: 15px; background: linear-gradient(45deg, #667eea, #764ba2); color: white; }
+        .image-name { font-weight: bold; margin-bottom: 5px; }
+        .image-size { font-size: 0.9rem; opacity: 0.8; }
+        .delete-button { position: absolute; top: 10px; right: 10px; background: rgba(255,0,0,0.8); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: background 0.3s ease; }
+        .delete-button:hover { background: rgba(255,0,0,1); }
+        .stats { text-align: center; color: white; margin-bottom: 20px; font-size: 1.2rem; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; backdrop-filter: blur(10px); }
+        .comments-section { background: rgba(255,255,255,0.9); padding: 15px; margin-top: 10px; border-radius: 0 0 15px 15px; }
+        .comment { background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #667eea; }
+        .comment-author { font-weight: bold; color: #667eea; margin-bottom: 5px; }
+        .comment-text { color: #333; line-height: 1.4; }
+        .comment-date { font-size: 0.8rem; color: #999; margin-top: 5px; }
+        .comment-form { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .comment-form input, .comment-form textarea { padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-family: inherit; }
+        .comment-form button { background: #667eea; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; transition: background 0.3s ease; }
+        .comment-form button:hover { background: #5a67d8; }
+        .loading { text-align: center; color: white; padding: 20px; }
+        .error { background: rgba(255,0,0,0.1); color: #ff4757; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: center; }
         @media (max-width: 768px) {
-            .image-gallery {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 15px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
+            .image-gallery { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+            h1 { font-size: 2rem; }
         }
     </style>
 </head>
@@ -263,25 +64,26 @@
         <div class="image-gallery" id="imageGallery"></div>
     </div>
 
-    <div id="authSection" style="text-align: center; margin-bottom: 20px;">
-    <input type="email" id="emailInput" placeholder="E-Mail" />
-    <input type="password" id="passwordInput" placeholder="Passwort" />
-    <button onclick="login()">Anmelden</button>
-    <button onclick="logout()">Abmelden</button>
-    <p id="authStatus" style="color: white; margin-top: 10px;"></p>
-</div>
-
+    <!-- Auth-Bereich -->
+    <div id="authSection" style="text-align: center; margin-bottom: 20px; color: white;">
+        <h2>🔑 Anmeldung / Registrierung</h2>
+        <input type="email" id="emailInput" placeholder="E-Mail" />
+        <input type="password" id="passwordInput" placeholder="Passwort" />
+        <br><br>
+        <button onclick="login()">Anmelden</button>
+        <button onclick="register()">Registrieren</button>
+        <button onclick="logout()">Abmelden</button>
+        <p id="authStatus" style="margin-top: 10px;"></p>
+    </div>
 
     <script>
-        // 🔥 HIER DEINE SUPABASE KEYS EINTRAGEN! 🔥
+        // 🔥 Supabase Keys eintragen
         const SUPABASE_URL = 'https://ujkdukifdmlzeoigwyzz.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqa2R1a2lmZG1semVvaWd3eXp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTg3NDksImV4cCI6MjA3MjAzNDc0OX0.WzxCT3sZouK_2pEP83qzkJ3-qUV0nMgSRS--Kd_ebKc';
         
-        // Supabase initialisieren
         const { createClient } = supabase;
         const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // DOM Elemente
         const fileInput = document.getElementById('fileInput');
         const imageGallery = document.getElementById('imageGallery');
         const imageCountElement = document.getElementById('imageCount');
@@ -289,140 +91,59 @@
         const loadingMessage = document.getElementById('loadingMessage');
         const errorMessage = document.getElementById('errorMessage');
 
-        // App starten
         document.addEventListener('DOMContentLoaded', () => {
             loadImages();
             setupEventListeners();
         });
 
         function setupEventListeners() {
-            // Drag & Drop Funktionalität
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.style.background = 'rgba(255,255,255,0.3)';
-            });
-
-            uploadArea.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                uploadArea.style.background = 'rgba(255,255,255,0.1)';
-            });
-
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.style.background = 'rgba(255,255,255,0.1)';
-                const files = Array.from(e.dataTransfer.files);
-                handleFiles(files);
-            });
-
-            fileInput.addEventListener('change', (e) => {
-                const files = Array.from(e.target.files);
-                handleFiles(files);
-            });
+            uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.background = 'rgba(255,255,255,0.3)'; });
+            uploadArea.addEventListener('dragleave', (e) => { e.preventDefault(); uploadArea.style.background = 'rgba(255,255,255,0.1)'; });
+            uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.style.background = 'rgba(255,255,255,0.1)'; handleFiles(Array.from(e.dataTransfer.files)); });
+            fileInput.addEventListener('change', (e) => handleFiles(Array.from(e.target.files)));
         }
 
-        // Bilder aus Datenbank laden
         async function loadImages() {
             try {
                 loadingMessage.style.display = 'block';
                 errorMessage.style.display = 'none';
-                
-                const { data: images, error } = await supabaseClient
-                    .from('images')
-                    .select('*')
-                    .order('uploaded_at', { ascending: false });
-
+                const { data: images, error } = await supabaseClient.from('images').select('*').order('uploaded_at', { ascending: false });
                 loadingMessage.style.display = 'none';
-
-                if (error) {
-                    throw new Error(error.message);
-                }
-
+                if (error) throw new Error(error.message);
                 imageGallery.innerHTML = '';
-                
-                if (images && images.length > 0) {
-                    for (const image of images) {
-                        await displayImageInGallery(image);
-                    }
-                } else {
-                    imageGallery.innerHTML = '<p style="color: white; text-align: center; grid-column: 1/-1;">Noch keine Bilder hochgeladen. Sei der Erste!</p>';
-                }
-
-                updateImageCount(images ? images.length : 0);
-
+                if (images.length > 0) for (const image of images) await displayImageInGallery(image);
+                else imageGallery.innerHTML = '<p style="color: white; text-align: center; grid-column: 1/-1;">Noch keine Bilder hochgeladen. Sei der Erste!</p>';
+                updateImageCount(images.length);
             } catch (error) {
-                console.error('Fehler beim Laden der Bilder:', error);
                 showError(`Fehler beim Laden: ${error.message}`);
                 loadingMessage.style.display = 'none';
                 updateImageCount(0);
             }
         }
 
-        // Neue Dateien verarbeiten
         async function handleFiles(files) {
-            for (const file of files) {
-                if (file.type.startsWith('image/')) {
-                    await uploadImage(file);
-                }
-            }
-            // Nach dem Upload alle Bilder neu laden
+            for (const file of files) if (file.type.startsWith('image/')) await uploadImage(file);
             await loadImages();
         }
 
-        // Bild zu Supabase hochladen
         async function uploadImage(file) {
             try {
                 const fileName = `${Date.now()}-${file.name}`;
-                
-                // 1. Bild zu Storage hochladen
-                const { data: storageData, error: storageError } = await supabaseClient.storage
-                    .from('images')
-                    .upload(fileName, file, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
-
-                if (storageError) {
-                    throw new Error(`Storage Fehler: ${storageError.message}`);
-                }
-
-                // 2. Bild-Info in Datenbank speichern
-                const { data: dbData, error: dbError } = await supabaseClient
-                    .from('images')
-                    .insert({
-                        title: file.name,
-                        image_url: fileName,
-                        file_size: file.size
-                    })
-                    .select()
-                    .single();
-
-                if (dbError) {
-                    throw new Error(`Datenbank Fehler: ${dbError.message}`);
-                }
-
-                console.log('Bild erfolgreich hochgeladen:', dbData);
-
-            } catch (error) {
-                console.error('Fehler beim Upload:', error);
-                showError(`Upload Fehler: ${error.message}`);
-            }
+                const { error: storageError } = await supabaseClient.storage.from('images').upload(fileName, file, { cacheControl: '3600', upsert: false });
+                if (storageError) throw new Error(`Storage Fehler: ${storageError.message}`);
+                const { error: dbError } = await supabaseClient.from('images').insert({ title: file.name, image_url: fileName, file_size: file.size }).select().single();
+                if (dbError) throw new Error(`Datenbank Fehler: ${dbError.message}`);
+            } catch (error) { showError(`Upload Fehler: ${error.message}`); }
         }
 
-        // Bild in Galerie anzeigen
         async function displayImageInGallery(imageData) {
             try {
-                // URL für das Bild generieren
-                const { data: urlData } = supabaseClient.storage
-                    .from('images')
-                    .getPublicUrl(imageData.image_url);
-
+                const { data: urlData } = supabaseClient.storage.from('images').getPublicUrl(imageData.image_url);
                 const imageItem = document.createElement('div');
                 imageItem.className = 'image-item';
                 imageItem.dataset.imageId = imageData.id;
-
                 const sizeKB = imageData.file_size ? (imageData.file_size / 1024).toFixed(1) : 'Unknown';
                 const uploadDate = new Date(imageData.uploaded_at).toLocaleDateString('de-DE');
-                
                 imageItem.innerHTML = `
                     <img src="${urlData.publicUrl}" alt="${imageData.title}" loading="lazy">
                     <button class="delete-button" onclick="deleteImage(${imageData.id}, '${imageData.image_url}')">×</button>
@@ -439,209 +160,80 @@
                         </div>
                     </div>
                 `;
-
                 imageGallery.appendChild(imageItem);
-
-                // Kommentare für dieses Bild laden
                 await loadComments(imageData.id);
-
-            } catch (error) {
-                console.error('Fehler beim Anzeigen des Bildes:', error);
-            }
+            } catch (error) { console.error(error); }
         }
 
-        // Kommentare laden
         async function loadComments(imageId) {
             try {
-                const { data: comments, error } = await supabaseClient
-                    .from('comments')
-                    .select('*')
-                    .eq('image_id', imageId)
-                    .order('created_at', { ascending: true });
-
-                if (error) {
-                    throw new Error(error.message);
-                }
-
+                const { data: comments, error } = await supabaseClient.from('comments').select('*').eq('image_id', imageId).order('created_at', { ascending: true });
+                if (error) throw new Error(error.message);
                 const commentsContainer = document.getElementById(`comments-${imageId}`);
-                if (comments && comments.length > 0) {
-                    commentsContainer.innerHTML = comments.map(comment => `
-                        <div class="comment">
-                            <div class="comment-author">${comment.author_name}</div>
-                            <div class="comment-text">${comment.comment_text}</div>
-                            <div class="comment-date">${new Date(comment.created_at).toLocaleString('de-DE')}</div>
-                        </div>
-                    `).join('');
-                } else {
-                    commentsContainer.innerHTML = '<p style="color: #999; font-style: italic;">Noch keine Kommentare. Schreib den ersten!</p>';
-                }
-
-            } catch (error) {
-                console.error('Fehler beim Laden der Kommentare:', error);
-            }
+                commentsContainer.innerHTML = comments.length > 0 ? comments.map(c => `<div class="comment"><div class="comment-author">${c.author_name}</div><div class="comment-text">${c.comment_text}</div><div class="comment-date">${new Date(c.created_at).toLocaleString('de-DE')}</div></div>`).join('') : '<p style="color: #999; font-style: italic;">Noch keine Kommentare. Schreib den ersten!</p>';
+            } catch (error) { console.error(error); }
         }
 
-        // Kommentar hinzufügen
         async function addComment(imageId) {
             try {
-                const authorInput = document.getElementById(`author-${imageId}`);
-                const commentInput = document.getElementById(`comment-${imageId}`);
-                
-                const author = authorInput.value.trim();
-                const commentText = commentInput.value.trim();
-
-                if (!author || !commentText) {
-                    alert('Bitte Name und Kommentar ausfüllen!');
-                    return;
-                }
-
-                const { data, error } = await supabaseClient
-                    .from('comments')
-                    .insert({
-                        image_id: imageId,
-                        author_name: author,
-                        comment_text: commentText
-                    });
-
-                if (error) {
-                    throw new Error(error.message);
-                }
-
-                // Eingaben leeren
-                authorInput.value = '';
-                commentInput.value = '';
-
-                // Kommentare neu laden
+                const author = document.getElementById(`author-${imageId}`).value.trim();
+                const commentText = document.getElementById(`comment-${imageId}`).value.trim();
+                if (!author || !commentText) return alert('Bitte Name und Kommentar ausfüllen!');
+                const { error } = await supabaseClient.from('comments').insert({ image_id: imageId, author_name: author, comment_text: commentText });
+                if (error) throw new Error(error.message);
+                document.getElementById(`author-${imageId}`).value = '';
+                document.getElementById(`comment-${imageId}`).value = '';
                 await loadComments(imageId);
-
-            } catch (error) {
-                console.error('Fehler beim Hinzufügen des Kommentars:', error);
-                showError(`Kommentar Fehler: ${error.message}`);
-            }
+            } catch (error) { showError(`Kommentar Fehler: ${error.message}`); }
         }
 
-        // Bild löschen
         async function deleteImage(imageId, fileName) {
-            if (!confirm('Bild wirklich löschen? Das kann nicht rückgängig gemacht werden!')) {
-                return;
-            }
-
+            if (!confirm('Bild wirklich löschen? Das kann nicht rückgängig gemacht werden!')) return;
             try {
-                // 1. Kommentare löschen
-                await supabaseClient
-                    .from('comments')
-                    .delete()
-                    .eq('image_id', imageId);
-
-                // 2. Datenbank-Eintrag löschen
-                const { error: dbError } = await supabaseClient
-                    .from('images')
-                    .delete()
-                    .eq('id', imageId);
-
-                if (dbError) {
-                    throw new Error(dbError.message);
-                }
-
-                // 3. Datei aus Storage löschen
-                const { error: storageError } = await supabaseClient.storage
-                    .from('images')
-                    .remove([fileName]);
-
-                if (storageError) {
-                    console.warn('Storage Lösch-Warnung:', storageError.message);
-                }
-
-                // 4. Element aus DOM entfernen
-                const imageElement = document.querySelector(`[data-image-id="${imageId}"]`);
-                if (imageElement) {
-                    imageElement.style.transform = 'scale(0) rotate(180deg)';
-                    imageElement.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        imageElement.remove();
-                        updateImageCount(imageGallery.children.length);
-                    }, 300);
-                }
-
-            } catch (error) {
-                console.error('Fehler beim Löschen:', error);
-                showError(`Lösch-Fehler: ${error.message}`);
-            }
+                await supabaseClient.from('comments').delete().eq('image_id', imageId);
+                const { error: dbError } = await supabaseClient.from('images').delete().eq('id', imageId);
+                if (dbError) throw new Error(dbError.message);
+                const { error: storageError } = await supabaseClient.storage.from('images').remove([fileName]);
+                if (storageError) console.warn('Storage Lösch-Warnung:', storageError.message);
+                const el = document.querySelector(`[data-image-id="${imageId}"]`);
+                if (el) { el.style.transform='scale(0) rotate(180deg)'; el.style.opacity='0'; setTimeout(()=>{el.remove(); updateImageCount(imageGallery.children.length)},300); }
+            } catch (error) { showError(`Lösch-Fehler: ${error.message}`); }
         }
 
-        // Hilfsfunktionen
-        function updateImageCount(count) {
-            imageCountElement.textContent = count;
+        function updateImageCount(count){ imageCountElement.textContent = count; }
+        function showError(msg){ errorMessage.textContent=msg; errorMessage.style.display='block'; setTimeout(()=>{errorMessage.style.display='none'},5000); }
+
+        // Auth-Funktionen
+        async function register() {
+            const email = document.getElementById("emailInput").value;
+            const password = document.getElementById("passwordInput").value;
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) showError("Registrierung fehlgeschlagen: " + error.message);
+            else document.getElementById("authStatus").textContent = "Registriert! Bitte E-Mail bestätigen 📧";
         }
 
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            setTimeout(() => {
-                errorMessage.style.display = 'none';
-            }, 5000);
+        async function login() {
+            const email = document.getElementById("emailInput").value;
+            const password = document.getElementById("passwordInput").value;
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) showError("Login fehlgeschlagen: " + error.message);
+            else document.getElementById("authStatus").textContent = "Eingeloggt ✅";
         }
 
-        // Initiale Styling für Animationen
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            document.getElementById("authStatus").textContent = "Abgemeldet ❌";
+        }
+
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (session) uploadArea.style.display="block";
+            else uploadArea.style.display="none";
+        });
+
+        // Animation
         const style = document.createElement('style');
-        style.textContent = `
-            .image-item {
-                opacity: 0;
-                transform: translateY(20px);
-                transition: all 0.3s ease;
-                animation: fadeInUp 0.6s ease forwards;
-            }
-            
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-        `;
+        style.textContent = `.image-item{opacity:0; transform:translateY(20px); transition:all 0.3s ease; animation:fadeInUp 0.6s ease forwards;} @keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}`;
         document.head.appendChild(style);
-        // Login
-async function login() {
-    const email = document.getElementById("emailInput").value;
-    const password = document.getElementById("passwordInput").value;
-
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-    });
-
-    if (error) {
-        showError("Login fehlgeschlagen: " + error.message);
-    } else {
-        document.getElementById("authStatus").textContent = "Eingeloggt ✅";
-        console.log("Eingeloggt:", data);
-    }
-}
-
-// Logout
-async function logout() {
-    await supabaseClient.auth.signOut();
-    document.getElementById("authStatus").textContent = "Abgemeldet ❌";
-}
-
-// Prüfen ob User eingeloggt ist
-supabaseClient.auth.onAuthStateChange((event, session) => {
-    if (session) {
-        document.getElementById("authStatus").textContent = "Eingeloggt ✅";
-        // Upload-Bereich freischalten
-        document.querySelector(".upload-area").style.display = "block";
-    } else {
-        document.getElementById("authStatus").textContent = "Abgemeldet ❌";
-        // Upload-Bereich verstecken
-        document.querySelector(".upload-area").style.display = "none";
-    }
-});
-
     </script>
 </body>
 </html>
