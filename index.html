@@ -1,121 +1,295 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Mein Blog</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #fafafa;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
-
-    nav {
-      background-color: #0044cc;
-      padding: 15px;
-      text-align: center;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    header {
-      text-align: center;
-      padding: 30px 0;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    .blog-entry {
-      background-color: white;
-      padding: 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border-radius: 8px;
-    }
-
-    .blog-entry img {
-      max-width: 100%;
-      border-radius: 6px;
-      margin-top: 15px;
-    }
-
-    .date {
-      color: #888;
-      font-size: 0.9em;
-      margin-bottom: 10px;
-    }
-
-    .comment-section {
-      margin-top: 20px;
-    }
-
-    .comment-section textarea {
-      width: 100%;
-      height: 60px;
-      margin-bottom: 10px;
-    }
-
-    .comment-section button {
-      padding: 8px 12px;
-      background-color: #0044cc;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9em;
-      color: #777;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine Bildergalerie</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            height: 250px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .image-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .image-container img:hover {
+            transform: scale(1.05);
+        }
+        
+        .add-image {
+            background-color: #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .add-image span {
+            font-size: 3rem;
+            color: #6a11cb;
+        }
+        
+        .add-image p {
+            margin-top: 10px;
+            color: #666;
+        }
+        
+        .upload-form {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 500px;
+        }
+        
+        .upload-form h2 {
+            margin-bottom: 15px;
+            color: #6a11cb;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.3s ease;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            background-color: #333;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <nav>
-    <a href="index.html">Startseite</a>
-    <a href="ueber.html">Über mich</a>
-    <a href="kontakt.html">Kontakt</a>
-  </nav>
-
-  <header>
-    <h1>Mein Blog</h1>
-    <p>Willkommen zu meinen Gedanken und Bildern</p>
-  </header>
-
-  <div class="container">
-    <div class="blog-entry">
-      <h2>Erster Beitrag</h2>
-      <p class="date">5. Mai 2025</p>
-      <p>Das ist mein erster Eintrag in diesem Blog. Ich hoffe, es gefällt euch!</p>
-      <img src="bilder/beispielbild.gif" alt="Beispielbild">
-
-      <div class="commentbox"></div>
-<script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script>
-<script>commentBox('5652065351106560-proj')</script>
+    <header>
+        <div class="container">
+            <h1>Meine Bildergalerie</h1>
+            <p>Füge deine Lieblingsbilder hinzu und teile sie mit anderen</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="intro">
+            <h2>Willkommen in deiner persönlichen Galerie</h2>
+            <p>Klicke auf das "+" Symbol unten, um Bilder hinzuzufügen. Du kannst auch direkt Bilder per Drag & Drop einfügen.</p>
+        </div>
+        
+        <div class="gallery" id="imageGallery">
+            <!-- Hier werden die Bilder eingefügt -->
+            <div class="image-container add-image" onclick="document.getElementById('uploadForm').style.display='block'">
+                <span>+</span>
+                <p>Bild hinzufügen</p>
+            </div>
+        </div>
+        
+        <div class="upload-form" id="uploadForm">
+            <h2>Bild hochladen</h2>
+            <div class="form-group">
+                <label for="imageUrl">Bild-URL:</label>
+                <input type="text" id="imageUrl" placeholder="https://example.com/bild.jpg">
+            </div>
+            <div class="form-group">
+                <label for="imageTitle">Titel (optional):</label>
+                <input type="text" id="imageTitle" placeholder="Titel des Bildes">
+            </div>
+            <button onclick="addImage()">Bild hinzufügen</button>
+            <button onclick="document.getElementById('uploadForm').style.display='none'" style="background: #666; margin-left: 10px;">Abbrechen</button>
+        </div>
     </div>
-  </div>
+    
+    <footer>
+        <div class="container">
+            <p>Erstellt mit ❤️ für deine Bilder</p>
+        </div>
+    </footer>
 
-  <footer>
-    &copy; 2025 Jan Erbes
-  </footer>
-
+    <script>
+        // Funktion zum Hinzufügen von Bildern
+        function addImage() {
+            const imageUrl = document.getElementById('imageUrl').value;
+            const imageTitle = document.getElementById('imageTitle').value || 'Bild';
+            
+            if (!imageUrl) {
+                alert('Bitte gib eine Bild-URL ein!');
+                return;
+            }
+            
+            const gallery = document.getElementById('imageGallery');
+            const addButton = document.querySelector('.add-image');
+            
+            const imageContainer = document.createElement('div');
+            imageContainer.className = 'image-container';
+            
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = imageTitle;
+            
+            imageContainer.appendChild(img);
+            
+            // Füge das neue Bild vor dem Hinzufügen-Button ein
+            gallery.insertBefore(imageContainer, addButton);
+            
+            // Formular zurücksetzen und ausblenden
+            document.getElementById('imageUrl').value = '';
+            document.getElementById('imageTitle').value = '';
+            document.getElementById('uploadForm').style.display = 'none';
+            
+            // Speichere die Bild-URL im localStorage
+            saveImageToStorage(imageUrl, imageTitle);
+        }
+        
+        // Funktion zum Speichern der Bilder im localStorage
+        function saveImageToStorage(url, title) {
+            let images = JSON.parse(localStorage.getItem('galleryImages')) || [];
+            images.push({ url, title });
+            localStorage.setItem('galleryImages', JSON.stringify(images));
+        }
+        
+        // Funktion zum Laden der gespeicherten Bilder beim Start
+        function loadImagesFromStorage() {
+            const images = JSON.parse(localStorage.getItem('galleryImages')) || [];
+            const gallery = document.getElementById('imageGallery');
+            const addButton = document.querySelector('.add-image');
+            
+            images.forEach(image => {
+                const imageContainer = document.createElement('div');
+                imageContainer.className = 'image-container';
+                
+                const img = document.createElement('img');
+                img.src = image.url;
+                img.alt = image.title;
+                
+                imageContainer.appendChild(img);
+                gallery.insertBefore(imageContainer, addButton);
+            });
+        }
+        
+        // Drag & Drop Funktionen
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            
+            if (files.length) {
+                // Hier könntest du Upload-Funktionalität für lokale Dateien hinzufügen
+                alert('Um lokale Dateien hochzuladen, verwende bitte die URL-Eingabe. Für einen echten Upload wäre Server-Seitige Programmierung notwendig.');
+            }
+        }
+        
+        // Event-Listener für Drag & Drop
+        document.addEventListener('DOMContentLoaded', function() {
+            loadImagesFromStorage();
+            
+            const gallery = document.getElementById('imageGallery');
+            gallery.addEventListener('dragover', handleDragOver);
+            gallery.addEventListener('drop', handleDrop);
+        });
+    </script>
 </body>
 </html>
