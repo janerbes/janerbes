@@ -1,37 +1,51 @@
-<p>Jan&#39;s Webseite</p>
+<p>Jan's Webseite</p>
 <header>
-  <h1 style="text-align: left;"><u><strong>Jan&#39;s supertolle coole
+  <h1 style="text-align: left;"><u><strong>Jan's supertolle coole
         Webseite</strong></u> :^)</h1>
-  <nav><button type="button">Start</button> <button
-      type="button">Bilder</button> <button type="button">Kontakt</button></nav>
+  <nav>
+    <button type="button" onclick="showPage('home')">Start</button>
+    <button type="button" onclick="showPage('bilder')">Bilder</button>
+    <button type="button" onclick="showPage('kontakt')">Kontakt</button>
+  </nav>
   <hr>
 </header>
-<main><!-- Startseite -->
+
+<main>
+  <!-- Startseite -->
   <section id="home">
     <h2>Startseite</h2>
     <p>Willkommen auf meiner Webseite! Nutze die Navigation, um die Seiten zu
-      wechseln.</p><img src="images/jan.jpg" alt="Jan" width="100"
-      class="fr-fic fr-dii">
+      wechseln.</p>
+    <img src="images/jan.jpg" alt="Jan" width="100" class="fr-fic fr-dii">
     <p>Das bin ich :^)!</p>
-  </section><!-- Bilderseite -->
-  <section id="bilder" hidden="">
+
+    <!-- Hintergrundmusik Startseite -->
+    <audio id="bgmHome" autoplay loop muted>
+      <source src="musik/start.mp3" type="audio/mpeg">
+    </audio>
+    <button onclick="playMusic('bgmHome')">🎵 Musik einschalten</button>
+  </section>
+
+  <!-- Bilderseite -->
+  <section id="bilder" hidden>
     <h2>Bilder</h2>
     <p>Hier sind meine festen Bilder:</p>
     <div id="gallery">
-      <!-- Passe die Dateinamen an deine Bilder im Ordner /images an --> <img
-        src="images/bild1.jpg" alt="Bild 1" width="300"
-        class="fr-fic fr-dii">&nbsp;<img src="images/bild2.jpg" alt="Bild 2"
-        width="300" class="fr-fic fr-dii">&nbsp;<img src="images/bild3.jpg"
-        alt="Bild 3" width="300" class="fr-fic fr-dii"></div>
-  </section><!-- Kontaktseite -->
-  <section id="kontakt" hidden="">
+      <img src="images/bild1.jpg" alt="Bild 1" width="300" class="fr-fic fr-dii">
+      <img src="images/bild2.jpg" alt="Bild 2" width="300" class="fr-fic fr-dii">
+      <img src="images/bild3.jpg" alt="Bild 3" width="300" class="fr-fic fr-dii">
+    </div>
+
+    <!-- Hintergrundmusik Bilderseite -->
+    <audio id="bgmBilder" autoplay loop muted>
+      <source src="musik/bilder.mp3" type="audio/mpeg">
+    </audio>
+    <button onclick="playMusic('bgmBilder')">🎵 Musik einschalten</button>
+  </section>
+
+  <!-- Kontaktseite -->
+  <section id="kontakt" hidden>
     <h2>Kontakt</h2>
     <ul>
       <li><a href="mailto:deine.email@example.com">E-Mail schreiben</a></li>
-    </ul>
-  </section>
-</main>
-<footer>
-  <hr>
-  <p>&copy; 2025 Jan Erbes</p>
-</footer>
+    </u
