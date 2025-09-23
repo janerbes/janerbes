@@ -44,4 +44,51 @@
 
     <!-- Hintergrundmusik Bilderseite -->
     <audio id="bgmBilder" autoplay loop muted>
-      <source src="musik
+      <source src="musik/bilder.mp3" type="audio/mpeg">
+    </audio>
+    <button onclick="playMusic('bgmBilder')">🎵 Musik einschalten</button>
+  </section>
+
+  <!-- Kontaktseite -->
+  <section id="kontakt" hidden>
+    <h2>Kontakt</h2>
+    <ul>
+      <li><a href="mailto:deine.email@example.com">E-Mail schreiben</a></li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <hr>
+  <p>&copy; 2025 Jan's Webseite</p>
+</footer>
+
+<script>
+  // Standardseite beim Laden
+  document.addEventListener('DOMContentLoaded', function() {
+    showPage('home');
+  });
+
+  // Navigation zwischen den Seiten
+  function showPage(id) {
+    var sections = document.querySelectorAll('main > section');
+    sections.forEach(function(sec) {
+      if (sec.id === id) {
+        sec.removeAttribute('hidden');
+      } else {
+        sec.setAttribute('hidden', '');
+      }
+    });
+  }
+
+  // Musik aktivieren (unmuten)
+  function playMusic(id) {
+    var audio = document.getElementById(id);
+    if (audio) {
+      audio.muted = false;
+      audio.play();
+    }
+  }
+</script>
+</body>
+</html>
