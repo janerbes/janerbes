@@ -1,73 +1,37 @@
-<!doctype html>
-<html lang="de">
-<head>
-  <meta charset="utf-8">
-  <title>Jan's Webseite</title>
-</head>
-<body>
-  <header>
-    <h1>Jan's supertolle coole Webseite :^)</h1>
-    <nav>
-      <button type="button" onclick="showPage('home')">Start</button>
-      <button type="button" onclick="showPage('bilder')">Bilder</button>
-      <button type="button" onclick="showPage('kontakt')">Kontakt</button>
-    </nav>
-    <hr>
-  </header>
-
-  <main>
-    <!-- Startseite -->
-    <section id="home">
-      <h2>Startseite</h2>
-      <p>Willkommen auf meiner Webseite! Nutze die Navigation, um die Seiten zu wechseln.</p>
-      <img src="images/jan.jpg" alt="Jan" width="100">
-      <p>Das bin ich :^)!</p>
-    </section>
-
-    <!-- Bilderseite -->
-    <section id="bilder" hidden>
-      <h2>Bilder</h2>
-      <p>Hier sind meine festen Bilder:</p>
-
-      <div id="gallery">
-        <!-- Passe die Dateinamen an deine Bilder im Ordner /images an -->
-        <img src="images/bild1.jpg" alt="Bild 1" width="300">
-        <img src="images/bild2.jpg" alt="Bild 2" width="300">
-        <img src="images/bild3.jpg" alt="Bild 3" width="300">
-      </div>
-    </section>
-
-    <!-- Kontaktseite -->
-    <section id="kontakt" hidden>
-      <h2>Kontakt</h2>
-      <ul>
-        <li><a href="mailto:deine.email@example.com">E-Mail schreiben</a></li>
-      </ul>
-    </section>
-  </main>
-
-  <footer>
-    <hr>
-    <p>&copy; 2025 Jan Erbes</p>
-  </footer>
-
-  <script>
-    // Standardseite beim Laden
-    document.addEventListener('DOMContentLoaded', function() {
-      showPage('home');
-    });
-
-    // Seitenumschaltung
-    function showPage(id) {
-      var sections = document.querySelectorAll('main > section');
-      sections.forEach(function(sec) {
-        if (sec.id === id) {
-          sec.removeAttribute('hidden');
-        } else {
-          sec.setAttribute('hidden', '');
-        }
-      });
-    }
-  </script>
-</body>
-</html>
+<p>Jan&#39;s Webseite</p>
+<header>
+  <h1 style="text-align: left;"><u><strong>Jan&#39;s supertolle coole
+        Webseite</strong></u> :^)</h1>
+  <nav><button type="button">Start</button> <button
+      type="button">Bilder</button> <button type="button">Kontakt</button></nav>
+  <hr>
+</header>
+<main><!-- Startseite -->
+  <section id="home">
+    <h2>Startseite</h2>
+    <p>Willkommen auf meiner Webseite! Nutze die Navigation, um die Seiten zu
+      wechseln.</p><img src="images/jan.jpg" alt="Jan" width="100"
+      class="fr-fic fr-dii">
+    <p>Das bin ich :^)!</p>
+  </section><!-- Bilderseite -->
+  <section id="bilder" hidden="">
+    <h2>Bilder</h2>
+    <p>Hier sind meine festen Bilder:</p>
+    <div id="gallery">
+      <!-- Passe die Dateinamen an deine Bilder im Ordner /images an --> <img
+        src="images/bild1.jpg" alt="Bild 1" width="300"
+        class="fr-fic fr-dii">&nbsp;<img src="images/bild2.jpg" alt="Bild 2"
+        width="300" class="fr-fic fr-dii">&nbsp;<img src="images/bild3.jpg"
+        alt="Bild 3" width="300" class="fr-fic fr-dii"></div>
+  </section><!-- Kontaktseite -->
+  <section id="kontakt" hidden="">
+    <h2>Kontakt</h2>
+    <ul>
+      <li><a href="mailto:deine.email@example.com">E-Mail schreiben</a></li>
+    </ul>
+  </section>
+</main>
+<footer>
+  <hr>
+  <p>&copy; 2025 Jan Erbes</p>
+</footer>
