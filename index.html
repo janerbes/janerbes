@@ -29,7 +29,13 @@
     <audio id="bgmHome" autoplay loop muted>
       <source src="musik/start.mp3" type="audio/mpeg">
     </audio>
-    <button onclick="playMusic('bgmHome')">🎵 Musik einschalten</button>
+    <div>
+      <button onclick="playMusic('bgmHome')">🎵 Musik einschalten</button>
+      <button onclick="pauseMusic('bgmHome')">🔇 Musik ausschalten</button>
+      <label>Lautstärke:
+        <input type="range" min="0" max="100" value="50" onchange="setVolume('bgmHome', this.value)">
+      </label>
+    </div>
   </section>
 
   <!-- Bilderseite -->
@@ -46,7 +52,13 @@
     <audio id="bgmBilder" autoplay loop muted>
       <source src="musik/bilder.mp3" type="audio/mpeg">
     </audio>
-    <button onclick="playMusic('bgmBilder')">🎵 Musik einschalten</button>
+    <div>
+      <button onclick="playMusic('bgmBilder')">🎵 Musik einschalten</button>
+      <button onclick="pauseMusic('bgmBilder')">🔇 Musik ausschalten</button>
+      <label>Lautstärke:
+        <input type="range" min="0" max="100" value="50" onchange="setVolume('bgmBilder', this.value)">
+      </label>
+    </div>
   </section>
 
   <!-- Kontaktseite -->
@@ -81,12 +93,28 @@
     });
   }
 
-  // Musik aktivieren (unmuten)
+  // Musik starten (unmuten)
   function playMusic(id) {
     var audio = document.getElementById(id);
     if (audio) {
       audio.muted = false;
       audio.play();
+    }
+  }
+
+  // Musik pausieren
+  function pauseMusic(id) {
+    var audio = document.getElementById(id);
+    if (audio) {
+      audio.pause();
+    }
+  }
+
+  // Lautstärke einstellen (0–100 → 0.0–1.0)
+  function setVolume(id, value) {
+    var audio = document.getElementById(id);
+    if (audio) {
+      audio.volume = value / 100;
     }
   }
 </script>
