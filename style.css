@@ -1,6 +1,7 @@
 :root {
   /* Background Colors */
   --background-color: #ffffff;
+  --text-color: #ffffff; /* Schriftfarbe */
 }
 
 body {
@@ -10,4 +11,5 @@ body {
   background-size: auto;
   margin: 0;
   min-height: 100vh;
+  color: var(--text-color); /* Schriftfarbe auf weiß setzen */
 }
