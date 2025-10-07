@@ -3,6 +3,72 @@
 <head>
   <meta charset="utf-8">
   <title>Jan's Webseite</title> 
+  <style>
+    /* ==== Dodger Minigame Style ==== */
+    #game-container {
+      position: relative;
+      width: 400px;
+      height: 500px;
+      margin: 30px auto;
+      background: linear-gradient(180deg, #111, #222);
+      overflow: hidden;
+      border: 3px solid #00ffcc;
+      border-radius: 12px;
+      box-shadow: 0 0 30px #00ffcc44;
+    }
+
+    #player {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: #00ffcc;
+      bottom: 20px;
+      left: 180px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .enemy {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: #ff0066;
+      top: 0;
+      border-radius: 6px;
+    }
+
+    #scoreboard {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    #start-btn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #00ffcc;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #start-btn:hover {
+      background: #00cc99;
+    }
+
+    #game-over {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 28px;
+      color: #fff;
+      text-shadow: 0 0 10px #ff0066;
+      display: none;
+    }
+  </style>
 </head>
 <body>
 <header>
@@ -13,6 +79,7 @@
     <button type="button" onclick="showPage('home')">Start</button>
     <button type="button" onclick="showPage('bilder')">Bilder</button>
     <button type="button" onclick="showPage('kontakt')">Kontakt</button>
+    <button type="button" onclick="showPage('minigame')">🎮 Minigame</button>
   </nav>
   <hr>
 </header>
@@ -68,6 +135,20 @@
       <li><a href="mailto:deine.email@example.com">E-Mail schreiben</a></li>
     </ul>
   </section>
+
+  <!-- 🎮 Minigame-Seite -->
+  <section id="minigame" hidden>
+    <h2>🎮 Dodger – Mini Survival Game</h2>
+    <p>Steuere das Quadrat mit <strong>WASD</strong> oder <strong>Pfeiltasten</strong> und weiche den fallenden Blöcken aus!</p>
+
+    <div id="game-container">
+      <div id="player"></div>
+      <div id="game-over">💀 GAME OVER 💀</div>
+    </div>
+
+    <div id="scoreboard">🏆 Score: <span id="score">0</span></div>
+    <button id="start-btn">Start Game</button>
+  </section>
 </main>
 
 <footer>
@@ -117,6 +198,91 @@
       audio.volume = value / 100;
     }
   }
+
+  /* ==== Dodger Game Script ==== */
+  const container = document.getElementById("game-container");
+  const player = document.getElementById("player");
+  const scoreDisplay = document.getElementById("score");
+  const startBtn = document.getElementById("start-btn");
+  const gameOverText = document.getElementById("game-over");
+
+  let gameInterval, enemyInterval, scoreInterval;
+  let score = 0;
+  let playerX = 180;
+  const playerSpeed = 10;
+  const enemies = [];
+
+  function startGame() {
+    score = 0;
+    scoreDisplay.textContent = score;
+    playerX = 180;
+    player.style.left = playerX + "px";
+    gameOverText.style.display = "none";
+
+    enemies.forEach((e) => e.remove());
+    enemies.length = 0;
+
+    gameInterval = setInterval(updateGame, 20);
+    enemyInterval = setInterval(spawnEnemy, 700);
+    scoreInterval = setInterval(() => {
+      score++;
+      scoreDisplay.textContent = score;
+    }, 200);
+  }
+
+  function endGame() {
+    clearInterval(gameInterval);
+    clearInterval(enemyInterval);
+    clearInterval(scoreInterval);
+    gameOverText.style.display = "block";
+  }
+
+  function spawnEnemy() {
+    const enemy = document.createElement("div");
+    enemy.classList.add("enemy");
+    enemy.style.left = Math.random() * (container.clientWidth - 40) + "px";
+    container.appendChild(enemy);
+    enemies.push(enemy);
+  }
+
+  function updateGame() {
+    enemies.forEach((enemy, index) => {
+      const currentTop = parseInt(enemy.style.top || "0");
+      enemy.style.top = currentTop + 5 + "px";
+
+      if (currentTop > container.clientHeight) {
+        enemy.remove();
+        enemies.splice(index, 1);
+      }
+
+      const playerRect = player.getBoundingClientRect();
+      const enemyRect = enemy.getBoundingClientRect();
+
+      if (
+        playerRect.left < enemyRect.right &&
+        playerRect.right > enemyRect.left &&
+        playerRect.top < enemyRect.bottom &&
+        playerRect.bottom > enemyRect.top
+      ) {
+        endGame();
+      }
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft" || e.key === "a") {
+      playerX -= playerSpeed;
+    } else if (e.key === "ArrowRight" || e.key === "d") {
+      playerX += playerSpeed;
+    }
+    playerX = Math.max(0, Math.min(container.clientWidth - 40, playerX));
+    player.style.left = playerX + "px";
+  });
+
+  startBtn.addEventListener("click", () => {
+    endGame();
+    startGame();
+  });
 </script>
 </body>
 </html>
