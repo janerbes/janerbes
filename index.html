@@ -3,80 +3,6 @@
 <head>
   <meta charset="utf-8">
   <title>Jan's Webseite</title> 
-  <style>
-    /* ==== Space Shooter Style ==== */
-    #space-container {
-      position: relative;
-      width: 400px;
-      height: 500px;
-      background: radial-gradient(circle at top, #00111a, #000);
-      border: 3px solid #0ff;
-      border-radius: 12px;
-      margin: 20px auto;
-      overflow: hidden;
-      box-shadow: 0 0 30px #0ff4;
-    }
-
-    #ship {
-      position: absolute;
-      bottom: 20px;
-      left: 180px;
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(180deg, #0ff, #007);
-      border-radius: 6px;
-      transition: left 0.05s;
-    }
-
-    .bullet {
-      position: absolute;
-      width: 6px;
-      height: 12px;
-      background: #0ff;
-      border-radius: 3px;
-    }
-
-    .meteor {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      background: #ff0066;
-      border-radius: 50%;
-    }
-
-    #space-over {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 28px;
-      color: white;
-      display: none;
-      text-shadow: 0 0 10px red;
-    }
-
-    #space-scoreboard {
-      text-align: center;
-      font-size: 18px;
-      margin: 10px;
-    }
-
-    #space-start {
-      display: block;
-      margin: 10px auto;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background: #0ff;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    #space-start:hover {
-      background: #09c;
-    }
-  </style>
 </head>
 <body>
 <header>
@@ -87,7 +13,6 @@
     <button type="button" onclick="showPage('home')">Start</button>
     <button type="button" onclick="showPage('bilder')">Bilder</button>
     <button type="button" onclick="showPage('kontakt')">Kontakt</button>
-    <button type="button" onclick="showPage('spaceshooter')">🎮 Space Shooter</button>
   </nav>
   <hr>
 </header>
@@ -143,19 +68,6 @@
       <li><a href="mailto:deine.email@example.com">E-Mail schreiben</a></li>
     </ul>
   </section>
-
-  <!-- 🚀 Space Shooter Minigame -->
-  <section id="spaceshooter" hidden>
-    <h2>🚀 Space Shooter Mini</h2>
-    <p>Bewege dich mit <b>A/D</b> oder <b>Pfeiltasten</b> und drücke <b>Leertaste</b>, um Meteoriten abzuschießen!</p>
-
-    <div id="space-container">
-      <div id="ship"></div>
-      <div id="space-over">💥 GAME OVER 💥</div>
-    </div>
-    <div id="space-scoreboard">Score: <span id="space-score">0</span></div>
-    <button id="space-start">Start Game</button>
-  </section>
 </main>
 
 <footer>
@@ -205,129 +117,6 @@
       audio.volume = value / 100;
     }
   }
-
-  /* ==== Space Shooter Game Script ==== */
-  const space = document.getElementById("space-container");
-  const ship = document.getElementById("ship");
-  const spaceScore = document.getElementById("space-score");
-  const spaceOver = document.getElementById("space-over");
-  const startBtn2 = document.getElementById("space-start");
-
-  let bullets = [];
-  let meteors = [];
-  let spaceX = 180;
-  let score2 = 0;
-  let running = false;
-  let gameLoop, meteorLoop;
-
-  function startSpaceGame() {
-    running = true;
-    score2 = 0;
-    spaceScore.textContent = score2;
-    spaceOver.style.display = "none";
-    bullets.forEach(b => b.remove());
-    meteors.forEach(m => m.remove());
-    bullets = [];
-    meteors = [];
-    spaceX = 180;
-    ship.style.left = spaceX + "px";
-
-    gameLoop = setInterval(updateSpace, 20);
-    meteorLoop = setInterval(spawnMeteor, 800);
-  }
-
-  function endSpaceGame() {
-    running = false;
-    clearInterval(gameLoop);
-    clearInterval(meteorLoop);
-    spaceOver.style.display = "block";
-  }
-
-  function spawnMeteor() {
-    const m = document.createElement("div");
-    m.classList.add("meteor");
-    m.style.left = Math.random() * 360 + "px";
-    m.style.top = "0px";
-    space.appendChild(m);
-    meteors.push(m);
-  }
-
-  function shoot() {
-    if (!running) return;
-    const b = document.createElement("div");
-    b.classList.add("bullet");
-    b.style.left = spaceX + 17 + "px";
-    b.style.bottom = "60px";
-    space.appendChild(b);
-    bullets.push(b);
-  }
-
-  function updateSpace() {
-    // Move bullets
-    bullets.forEach((b, bi) => {
-      const bottom = parseInt(b.style.bottom);
-      b.style.bottom = bottom + 10 + "px";
-      if (bottom > 500) {
-        b.remove();
-        bullets.splice(bi, 1);
-      }
-    });
-
-    // Move meteors
-    meteors.forEach((m, mi) => {
-      const top = parseInt(m.style.top || "0");
-      m.style.top = top + 4 + "px";
-
-      if (top > 500) {
-        m.remove();
-        meteors.splice(mi, 1);
-      }
-
-      // Collision with ship
-      const sRect = ship.getBoundingClientRect();
-      const mRect = m.getBoundingClientRect();
-      if (
-        sRect.left < mRect.right &&
-        sRect.right > mRect.left &&
-        sRect.top < mRect.bottom &&
-        sRect.bottom > mRect.top
-      ) {
-        endSpaceGame();
-      }
-
-      // Collision with bullet
-      bullets.forEach((b, bi) => {
-        const bRect = b.getBoundingClientRect();
-        if (
-          bRect.left < mRect.right &&
-          bRect.right > mRect.left &&
-          bRect.top < mRect.bottom &&
-          bRect.bottom > mRect.top
-        ) {
-          m.remove();
-          b.remove();
-          meteors.splice(mi, 1);
-          bullets.splice(bi, 1);
-          score2++;
-          spaceScore.textContent = score2;
-        }
-      });
-    });
-  }
-
-  document.addEventListener("keydown", (e) => {
-    if (!running) return;
-    if (e.key === "ArrowLeft" || e.key === "a") spaceX -= 10;
-    if (e.key === "ArrowRight" || e.key === "d") spaceX += 10;
-    if (e.key === " ") shoot();
-    spaceX = Math.max(0, Math.min(360, spaceX));
-    ship.style.left = spaceX + "px";
-  });
-
-  startBtn2.addEventListener("click", () => {
-    endSpaceGame();
-    startSpaceGame();
-  });
 </script>
 </body>
 </html>
